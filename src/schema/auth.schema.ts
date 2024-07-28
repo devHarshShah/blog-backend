@@ -1,15 +1,16 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
 const registerSchema = z.object({
+  name: z.string(),
   email: z.string(),
   password: z.string(),
-})
+});
 
 const loginSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(8)
-})
+  password: z.string().min(8),
+});
 
-type RegisterType = z.infer<typeof registerSchema>
+type RegisterType = z.infer<typeof registerSchema>;
 
-export { registerSchema, loginSchema, type RegisterType }
+export { registerSchema, loginSchema, type RegisterType };
