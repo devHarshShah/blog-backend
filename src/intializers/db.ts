@@ -1,7 +1,9 @@
 import mongoose from 'mongoose'
-import envGet from '../helpers/getEnv.js'
+import dotenv from 'dotenv'
 
-const URL: string = envGet.DB_URL
+dotenv.config()
+
+const URL: string = process.env.MONGO_URL || ''
 
 async function connectToDB (): Promise<void> {
   try {
