@@ -49,8 +49,17 @@ export const CreatePostController = async (req: Request, res: Response) => {
 
 export const FetchPostsController = async (req: Request, res: Response) => {
   try {
-    const posts = await Post.find().populate('author', 'name');
-    return res.status(200).json(posts);
+    const authorId = req.query.author;
+    if (authorId) {
+      if (!validator.isMongoId(authorId as string)) {
+        return res.status(400).json({ message: 'Invalid author ID' });
+      }
+      const posts = await Post.find({ author: authorId }).populate('author', 'name');
+      return res.status(200).json(posts);
+    } else {
+      const posts = await Post.find().populate('author', 'name');
+      return res.status(200).json(posts);
+    }
   } catch (error) {
     console.error('Error in FetchPostsController:', error);
     return res.status(500).json({ message: 'Internal server error' });
