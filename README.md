@@ -31,6 +31,8 @@ To utilize the Attack Capital personal blog website, follow these steps:
 git clone https://github.com/devHarshShah/blog-frontend
 git clone https://github.com/devHarshShah/blog-backend
 ```
+#### - Enviroment Variables
+Copy content of .env.sample to .env and change the content only if required
 
 # API (Backend)
 
