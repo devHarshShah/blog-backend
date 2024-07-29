@@ -91,3 +91,48 @@ export const FetchMyPostsController = async (req: Request, res: Response) => {
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+export const DeletePostController = async (req: Request, res: Response) => {
+  try {
+    const postId = req.query.id;
+    if (postId) {
+      if (!validator.isMongoId(postId as string)) {
+        return res.status(400).json({ message: 'Invalid Post ID' });
+      }
+      const posts = await Post.findByIdAndDelete(postId);
+      return res.status(200).json(posts);
+    } else {
+      return res.status(400).json('Error Occured');
+    }
+  } catch (error) {
+    console.error('Error in FetchPostsController:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+export const GetSpecificPostController = async (req: Request, res: Response) => {
+  try {
+    const authorId: string | null = req.body.decoded.sub;
+    const postId = req.query.id;
+    if (authorId == null) {
+      console.log('Invalid user ID');
+      return res.status(400).json({ message: 'Invalid user ID' });
+    }
+
+    const user = await User.findById(authorId);
+    if (user == null) {
+      console.log('User not found');
+      return res.status(400).json({ message: 'User not found' });
+    }
+    if (authorId) {
+      if (!validator.isMongoId(authorId as string)) {
+        return res.status(400).json({ message: 'Invalid author ID' });
+      }
+      const post = await Post.findOne({ _id: postId }).populate('author', 'name');
+      return res.status(200).json(post);
+    }
+  } catch (error) {
+    console.error('Error in FetchPostsController:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
