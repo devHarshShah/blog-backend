@@ -6,7 +6,7 @@ import connectToDB from './intializers/db';
 import bodyParser from 'body-parser';
 
 const app: Application = express();
-const port: number = 3000;
+const port: number = 8000;
 
 void connectToDB()
 

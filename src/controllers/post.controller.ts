@@ -65,3 +65,29 @@ export const FetchPostsController = async (req: Request, res: Response) => {
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+export const FetchMyPostsController = async (req: Request, res: Response) => {
+  try {
+    const authorId: string | null = req.body.decoded.sub;
+    if (authorId == null) {
+      console.log('Invalid user ID');
+      return res.status(400).json({ message: 'Invalid user ID' });
+    }
+
+    const user = await User.findById(authorId);
+    if (user == null) {
+      console.log('User not found');
+      return res.status(400).json({ message: 'User not found' });
+    }
+    if (authorId) {
+      if (!validator.isMongoId(authorId as string)) {
+        return res.status(400).json({ message: 'Invalid author ID' });
+      }
+      const posts = await Post.find({ author: authorId }).populate('author', 'name');
+      return res.status(200).json(posts);
+    }
+  } catch (error) {
+    console.error('Error in FetchPostsController:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
